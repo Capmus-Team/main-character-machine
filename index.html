@@ -1,1 +1,163 @@
-<your html file content>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Main Character Machine</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      background-color: #f4f4f9;
+    }
+
+    h1 {
+      color: #333;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 400px;
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    input[type="text"], input[type="email"], input[type="number"] {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    button {
+      padding: 10px 15px;
+      background: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    button:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+
+    .image-preview {
+      margin: 15px 0;
+      width: 100%;
+      height: auto;
+      max-height: 200px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    .quest {
+      margin-top: 20px;
+      padding: 15px;
+      background: #e9f7ef;
+      border-left: 4px solid #28a745;
+      border-radius: 5px;
+      color: #155724;
+    }
+
+    .points {
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #007bff;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Main Character Machine</h1>
+
+    <div id="registration">
+      <input type="text" id="name" placeholder="Name" required>
+      <input type="email" id="email" placeholder="Email" required>
+      <input type="number" id="age" placeholder="Age" required>
+      <button id="startButton">Start</button>
+    </div>
+
+    <div id="photoUpload" style="display: none;">
+      <input type="file" id="photo" accept="image/*" capture="camera">
+      <img id="imagePreview" class="image-preview" alt="Image preview" style="display: none;">
+      <button id="generateQuestButton" disabled>Generate Quest</button>
+    </div>
+
+    <div id="questSection" style="display: none;">
+      <div id="quest" class="quest"></div>
+      <button id="successButton">Success</button>
+      <button id="failButton">Fail</button>
+      <div class="points">Total Points: <span id="points">0</span></div>
+    </div>
+  </div>
+
+  <script>
+    let totalPoints = 0;
+
+    document.getElementById('startButton').addEventListener('click', () => {
+      const name = document.getElementById('name').value;
+      const email = document.getElementById('email').value;
+      const age = document.getElementById('age').value;
+
+      if (name && email && age) {
+        document.getElementById('registration').style.display = 'none';
+        document.getElementById('photoUpload').style.display = 'block';
+      } else {
+        alert('Please fill all the fields.');
+      }
+    });
+
+    document.getElementById('photo').addEventListener('change', (event) => {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          document.getElementById('imagePreview').src = e.target.result;
+          document.getElementById('imagePreview').style.display = 'block';
+          document.getElementById('generateQuestButton').disabled = false;
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    document.getElementById('generateQuestButton').addEventListener('click', () => {
+      // Simulated AI output for MVP
+      const quest = {
+        title: 'Tower of Cushions',
+        instructions: 'Collect all pillows and stack them on the table.',
+        points: Math.floor(Math.random() * 20) + 10
+      };
+
+      document.getElementById('photoUpload').style.display = 'none';
+      document.getElementById('questSection').style.display = 'block';
+
+      document.getElementById('quest').innerHTML = `<strong>${quest.title}</strong><br>${quest.instructions}<br>Points: ${quest.points}`;
+      document.getElementById('quest').dataset.points = quest.points;
+    });
+
+    document.getElementById('successButton').addEventListener('click', () => {
+      const points = parseInt(document.getElementById('quest').dataset.points, 10);
+      totalPoints += points;
+      document.getElementById('points').innerText = totalPoints;
+      alert('Quest completed! Well done!');
+    });
+
+    document.getElementById('failButton').addEventListener('click', () => {
+      alert('Quest failed! Try again next time.');
+    });
+  </script>
+</body>
+</html>
